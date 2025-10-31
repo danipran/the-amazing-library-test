@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "the-amazing-library"
-version = "0.1.0"
+version = "1.0.0"
 description = 'Such an amazing library. Wow. It does so many amazing things. Just amazing. Unbelievably so.'
 readme = "README.md"
 requires-python = ">=3.10"
