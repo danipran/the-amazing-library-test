@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "the-amazing-library"
-dynamic = ["version"]
+version = "0.1.0"
 description = 'Such an amazing library. Wow. It does so many amazing things. Just amazing. Unbelievably so.'
 readme = "README.md"
 requires-python = ">=3.10"
@@ -38,26 +38,20 @@ Documentation = "https://github.com/danipran/the-amazing-library#readme"
 Issues = "https://github.com/danipran/the-amazing-library/issues"
 Source = "https://github.com/danipran/the-amazing-library"
 
-[tool.hatch.version]
-path = "src/the_amazing_library/__about__.py"
-
 [tool.hatch.envs.types]
 extra-dependencies = [
   "mypy>=1.0.0",
 ]
 [tool.hatch.envs.types.scripts]
-check = "mypy --install-types --non-interactive {args:src/the_amazing_library tests}"
+check = "mypy --install-types --non-interactive {args:the_amazing_library tests}"
 
 [tool.coverage.run]
 source_pkgs = ["the_amazing_library", "tests"]
 branch = true
 parallel = true
-omit = [
-  "src/the_amazing_library/__about__.py",
-]
 
 [tool.coverage.paths]
-the_amazing_library = ["src/the_amazing_library", "*/the-amazing-library/src/the_amazing_library"]
+the_amazing_library = ["the_amazing_library", "*/the-amazing-library/the_amazing_library"]
 tests = ["tests", "*/the-amazing-library/tests"]
 
 [tool.coverage.report]
