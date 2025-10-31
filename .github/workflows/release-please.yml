@@ -4,6 +4,11 @@ on:
     branches:
       - main
   workflow_dispatch:
+    inputs:
+      tag:
+        description: Which tag to publish.
+        required: true
+        type: string
 
 jobs:
   release-please:
@@ -29,12 +34,13 @@ jobs:
 
     needs: 
       - release-please
-    if: ${{ needs.release-please.outputs.release_created }}
+    if: ${{ needs.release-please.outputs.release_created || inputs.tag }} 
 
     steps:
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
+        ref: ${{ inputs.tag == '' && '' || format('refs/tags/{0}', inputs.tag) }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
@@ -59,7 +65,7 @@ jobs:
       - build
       - release-please
     runs-on: ubuntu-latest
-    if: ${{ needs.release-please.outputs.release_created }}
+    if: ${{ needs.release-please.outputs.release_created || inputs.tag }}
 
     environment:
       name: testpypi
