@@ -40,7 +40,7 @@ jobs:
     - uses: actions/checkout@v4
       with:
         persist-credentials: false
-        ref: ${{ inputs.tag == '' && '' || format('refs/tags/{0}', inputs.tag) }}
+        ref: ${{ inputs.tag == null && null || format('{0}', inputs.tag) }}
     - name: Set up Python
       uses: actions/setup-python@v5
       with:
