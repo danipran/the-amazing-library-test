@@ -1,5 +1,16 @@
 # Changelog
 
+## [3.0.0](https://github.com/danipran/the-amazing-library-test/compare/v2.0.0...v3.0.0) (2025-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* add now divides instead of adding
+
+### Features
+
+* Add now divides instead of adding ([7444352](https://github.com/danipran/the-amazing-library-test/commit/7444352fb1151eebfe2f14622e2e54959be983e3))
+
 ## [2.0.0](https://github.com/danipran/the-amazing-library-test/compare/v1.0.0...v2.0.0) (2025-10-31)
 
 
