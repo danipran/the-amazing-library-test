@@ -1,70 +1,25 @@
-name: release-please & build
+name: release-please
 on:
   workflow_call:
     inputs:
-      ref:
-        description: "The branch, tag or SHA to publish."
-        required: true
-        type: string
+      include-component-in-tag:
+        description: "If true, add prefix to tags and branches, allowing multiple libraries to be released from the same repository"
+        required: false
+        default: true
+        type: boolean
     outputs:
-        artifact_name:
-          description: "Name of the uploaded artifact. Empty if no artifact was created."
-          value: ${{ jobs.build.outputs.artifact_name }}
-
-env:
-  # Default name for artifact.
-  ARTIFACT_NAME: python-package-dist
+        release_created:
+          description: "Whether a release was created or not"
+          value: ${{ jobs.release-please.outputs.release_created }}
 
 jobs:
   release-please:
     runs-on: ubuntu-latest
-
     outputs:
       release_created: ${{ steps.release.outputs.release_created }}
-    
     steps:
       - uses: googleapis/release-please-action@v4
         id: release
         with:
-          include-component-in-tag: false
+          include-component-in-tag: ${{ inputs.include-component-in-tag }}
           token: ${{ secrets.RELEASE_PLEASE_TOKEN }}
-
-  build:
-    name: Build distribution 📦
-    runs-on: ubuntu-latest
-
-    outputs:
-      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
-
-    needs: 
-      - release-please
-
-    # Run build either when a new is released or when invoked with a ref.
-    if: ${{ needs.release-please.outputs.release_created || inputs.ref }} 
-
-    steps:
-    - uses: actions/checkout@v5
-      with:
-        persist-credentials: false
-        ref: ${{ inputs.ref == null && null || inputs.ref }}
-    - name: Set up Python
-      uses: actions/setup-python@v6
-      with:
-        python-version: "3.x"
-    - name: Install pypa/build
-      run: >-
-        python3 -m
-        pip install
-        build
-        --user
-    - name: Build a binary wheel and a source tarball
-      run: python3 -m build
-    - name: Store the distribution packages
-      uses: actions/upload-artifact@v5
-      with:
-        name: ${{ env.ARTIFACT_NAME }}
-        path: dist/
-    - name: Set artifact name on success
-      id: set-artifact-name
-      if: ${{ success() }}
-      run: echo "artifact_name=${{ env.ARTIFACT_NAME }}" >> $GITHUB_OUTPUT

@@ -11,34 +11,39 @@ on:
         type: string
 
 jobs:
-  release-please-and-build:
+  release-please:
     permissions:
       contents: write
       pull-requests: write
     secrets: inherit
     uses: ./.github/workflows/release-please.yml
     with:
+        include-component-in-tag: false
+
+  build:
+    needs: 
+      - release-please
+    uses: ./.github/workflows/build.yml
+    with:
         ref: ${{ inputs.ref }}
+    if: ${{ needs.release-please.outputs.release_created || inputs.ref }}
 
   publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - release-please-and-build
+    name: Publish to TestPyPI
     runs-on: ubuntu-latest
-    if: ${{ needs.release-please-and-build.outputs.artifact_name }}
-
+    needs:
+      - build
+    if: ${{ needs.build.outputs.artifact_name }}
     environment:
       name: testpypi
       url: https://test.pypi.org/p/the-amazing-library
-
     permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
+      id-token: write  # mandatory for trusted publishing
     steps:
     - name: Download all the dists
       uses: actions/download-artifact@v6
       with:
-        name: ${{ needs.release-please-and-build.outputs.artifact_name }}
+        name: ${{ needs.build.outputs.artifact_name }}
         path: dist/
     - name: Publish distribution 📦 to TestPyPI
       uses: pypa/gh-action-pypi-publish@release/v1

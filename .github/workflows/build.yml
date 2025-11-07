@@ -1,0 +1,49 @@
+name: build
+on:
+  workflow_call:
+    inputs:
+      ref:
+        description: "The branch, tag or SHA to publish."
+        required: true
+        type: string
+    outputs:
+        artifact_name:
+          description: "Name of the uploaded artifact. Empty if no artifact was created."
+          value: ${{ jobs.build.outputs.artifact_name }}
+
+env:
+  # Default name for artifact.
+  ARTIFACT_NAME: python-package-dist
+
+jobs:
+  build:
+    name: Build distribution 📦
+    runs-on: ubuntu-latest
+    outputs:
+      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
+    steps:
+    - uses: actions/checkout@v5
+      with:
+        persist-credentials: false
+        ref: ${{ inputs.ref == null && null || inputs.ref }}
+    - name: Set up Python
+      uses: actions/setup-python@v6
+      with:
+        python-version: "3.x"
+    - name: Install pypa/build
+      run: >-
+        python3 -m
+        pip install
+        build
+        --user
+    - name: Build a binary wheel and a source tarball
+      run: python3 -m build
+    - name: Store the distribution packages
+      uses: actions/upload-artifact@v5
+      with:
+        name: ${{ env.ARTIFACT_NAME }}
+        path: dist/
+    - name: Set artifact name on success
+      id: set-artifact-name
+      if: ${{ success() }}
+      run: echo "artifact_name=${{ env.ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
