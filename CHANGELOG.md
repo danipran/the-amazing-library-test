@@ -1,5 +1,16 @@
 # Changelog
 
+## [4.0.0](https://github.com/danipran/the-amazing-library-test/compare/v3.0.0...v4.0.0) (2025-11-07)
+
+
+### ⚠ BREAKING CHANGES
+
+* add now performs a calculation that returns 0 instead of dividing
+
+### Features
+
+* Add now performs a calculation that returns 0 instead of dividing ([3e7edf9](https://github.com/danipran/the-amazing-library-test/commit/3e7edf97e696c9d4698959de1413fb2986784fc8))
+
 ## [3.0.0](https://github.com/danipran/the-amazing-library-test/compare/v2.0.0...v3.0.0) (2025-11-07)
 
 
