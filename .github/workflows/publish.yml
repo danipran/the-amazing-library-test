@@ -1,0 +1,42 @@
+name: Release
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+    inputs:
+      ref:
+        description: "The branch, tag or SHA to publish."
+        required: true
+        type: string
+
+jobs:
+  release-please-and-build:
+    uses: ./.github/workflows/release-please.yml
+    with:
+        ref: ${{ inputs.ref }}
+
+  publish-to-testpypi:
+    name: Publish Python 🐍 distribution 📦 to TestPyPI
+    needs:
+      - release-please-and-build
+    runs-on: ubuntu-latest
+    if: ${{ needs.release-please-and-build.outputs.artifact_name }}
+
+    environment:
+      name: testpypi
+      url: https://test.pypi.org/p/the-amazing-library
+
+    permissions:
+      id-token: write  # IMPORTANT: mandatory for trusted publishing
+
+    steps:
+    - name: Download all the dists
+      uses: actions/download-artifact@v6
+      with:
+        name: ${{ needs.release-please-and-build.outputs.artifact_name }}
+        path: dist/
+    - name: Publish distribution 📦 to TestPyPI
+      uses: pypa/gh-action-pypi-publish@release/v1
+      with:
+        repository-url: https://test.pypi.org/legacy/

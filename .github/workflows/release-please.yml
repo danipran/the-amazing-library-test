@@ -1,14 +1,19 @@
-name: release-please
+name: release-please & build
 on:
-  push:
-    branches:
-      - main
-  workflow_dispatch:
+  workflow_call:
     inputs:
-      tag:
-        description: Which tag to publish.
+      ref:
+        description: "The branch, tag or SHA to publish."
         required: true
         type: string
+    outputs:
+        artifact_name:
+          description: "Name of the uploaded artifact. Empty if no artifact was created."
+          value: ${{ jobs.build.outputs.artifact_name }}
+
+env:
+  # Default name for artifact.
+  ARTIFACT_NAME: python-package-dist
 
 jobs:
   release-please:
@@ -32,17 +37,22 @@ jobs:
     name: Build distribution 📦
     runs-on: ubuntu-latest
 
+    outputs:
+      artifact_name: ${{ steps.set-artifact-name.outputs.artifact_name }}
+
     needs: 
       - release-please
-    if: ${{ needs.release-please.outputs.release_created || inputs.tag }} 
+
+    # Run build either when a new is released or when invoked with a ref.
+    if: ${{ needs.release-please.outputs.release_created || inputs.ref }} 
 
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         persist-credentials: false
-        ref: ${{ inputs.tag == null && null || format('{0}', inputs.tag) }}
+        ref: ${{ inputs.ref == null && null || inputs.ref }}
     - name: Set up Python
-      uses: actions/setup-python@v5
+      uses: actions/setup-python@v6
       with:
         python-version: "3.x"
     - name: Install pypa/build
@@ -54,33 +64,11 @@ jobs:
     - name: Build a binary wheel and a source tarball
       run: python3 -m build
     - name: Store the distribution packages
-      uses: actions/upload-artifact@v4
+      uses: actions/upload-artifact@v5
       with:
-        name: python-package-distributions
+        name: ${{ env.ARTIFACT_NAME }}
         path: dist/
-
-  publish-to-testpypi:
-    name: Publish Python 🐍 distribution 📦 to TestPyPI
-    needs:
-      - build
-      - release-please
-    runs-on: ubuntu-latest
-    if: ${{ needs.release-please.outputs.release_created || inputs.tag }}
-
-    environment:
-      name: testpypi
-      url: https://test.pypi.org/p/<package-name>
-
-    permissions:
-      id-token: write  # IMPORTANT: mandatory for trusted publishing
-
-    steps:
-    - name: Download all the dists
-      uses: actions/download-artifact@v4
-      with:
-        name: python-package-distributions
-        path: dist/
-    - name: Publish distribution 📦 to TestPyPI
-      uses: pypa/gh-action-pypi-publish@release/v1
-      with:
-        repository-url: https://test.pypi.org/legacy/
+    - name: Set artifact name on success
+      id: set-artifact-name
+      if: ${{ success() }}
+      run: echo "artifact_name=${{ env.ARTIFACT_NAME }}" >> $GITHUB_OUTPUT
