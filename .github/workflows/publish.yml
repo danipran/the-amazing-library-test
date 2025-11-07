@@ -1,4 +1,6 @@
 name: Release
+run-name: ${{ inputs.ref && format('Publish {0}', inputs.ref) || null }}
+
 on:
   push:
     branches:
