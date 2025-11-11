@@ -1,5 +1,16 @@
 # Changelog
 
+## [5.0.0](https://github.com/danipran/the-amazing-library-test/compare/v4.1.0...v5.0.0) (2025-11-11)
+
+
+### ⚠ BREAKING CHANGES
+
+* add now adds the components and returns it as str
+
+### Features
+
+* Add now adds the components and returns it as str ([3a34560](https://github.com/danipran/the-amazing-library-test/commit/3a3456006cb52babca5340c9fa3605514adfc742))
+
 ## [4.1.0](https://github.com/danipran/the-amazing-library-test/compare/v4.0.0...v4.1.0) (2025-11-11)
 
 
