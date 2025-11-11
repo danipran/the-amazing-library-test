@@ -1,5 +1,12 @@
 # Changelog
 
+## [4.1.0](https://github.com/danipran/the-amazing-library-test/compare/v4.0.0...v4.1.0) (2025-11-11)
+
+
+### Features
+
+* Add now adds 1 to the final calculation ([c0506df](https://github.com/danipran/the-amazing-library-test/commit/c0506df1715ef0a62ae619a290babd8b36a25573))
+
 ## [4.0.0](https://github.com/danipran/the-amazing-library-test/compare/v3.0.0...v4.0.0) (2025-11-07)
 
 
