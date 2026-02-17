@@ -22,7 +22,7 @@ on:
 
 jobs:
   release-please:
-    uses: City-of-Helsinki/.github/.github/workflows/release-please.yml@101cfa08b01cdbaefa05f301e85a0b4fee13e942
+    uses: City-of-Helsinki/.github/.github/workflows/release-please.yml@main
     permissions:
       contents: write
       pull-requests: write
@@ -32,7 +32,7 @@ jobs:
   build:
     needs:
       - release-please
-    uses: City-of-Helsinki/.github/.github/workflows/build-python-dists.yml@101cfa08b01cdbaefa05f301e85a0b4fee13e942
+    uses: City-of-Helsinki/.github/.github/workflows/build-python-dists.yml@main
     with:
         ref: ${{ inputs.ref }}
     # Run build job if a release was created or a ref was specified (i.e. workflow was invoked manually)
