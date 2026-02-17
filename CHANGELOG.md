@@ -1,5 +1,13 @@
 # Changelog
 
+## [6.1.0](https://github.com/danipran/the-amazing-library-test/compare/v6.0.0...v6.1.0) (2026-02-17)
+
+
+### Features
+
+* "äää" ää öö öÖ "öö" ([eafc7c9](https://github.com/danipran/the-amazing-library-test/commit/eafc7c9524f56503a7f66e90bbcc7adbf0ad6f7d))
+* äääääää ([154ac0b](https://github.com/danipran/the-amazing-library-test/commit/154ac0ba55884345c4900b9d1ba15f876d431cf9))
+
 ## [6.0.0](https://github.com/danipran/the-amazing-library-test/compare/v5.0.0...v6.0.0) (2026-02-17)
 
 
