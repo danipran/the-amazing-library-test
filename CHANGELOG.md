@@ -1,5 +1,16 @@
 # Changelog
 
+## [6.0.0](https://github.com/danipran/the-amazing-library-test/compare/v5.0.0...v6.0.0) (2026-02-17)
+
+
+### ⚠ BREAKING CHANGES
+
+* add now subtracts instead of adding
+
+### Features
+
+* Add now subtracts instead of adding ([2ec8ec8](https://github.com/danipran/the-amazing-library-test/commit/2ec8ec8fdf55807fc3bcff6755687897f5780708))
+
 ## [5.0.0](https://github.com/danipran/the-amazing-library-test/compare/v4.1.0...v5.0.0) (2025-11-11)
 
 
