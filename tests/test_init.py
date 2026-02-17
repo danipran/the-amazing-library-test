@@ -1,6 +1,7 @@
 import pytest
 from the_amazing_library import add
 
+
 @pytest.mark.parametrize(
     "a, b, expected",
     [
@@ -9,7 +10,7 @@ from the_amazing_library import add
         (0, 0, 0),
         (-2, 3, 1),
         (2, -3, -1),
-    ]
+    ],
 )
 def test_add(a, b, expected):
     assert add(a, b) == expected
