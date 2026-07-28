@@ -1,6 +1,16 @@
 name: Create release & publish to PyPI
-# If ran manually, e.g. with ref set to "refs/tags/v1.2.3", set the run name to "Publish refs/tags/v1.2.3".
-run-name: ${{ inputs.ref && format('Publish {0}', inputs.ref) || null }}
+# For manual runs:
+# - If ref is set (for example, "refs/tags/v1.2.3"), use "Publish refs/tags/v1.2.3".
+# - If skipping build (for example, ref is "main"), use "Release please only (main)"
+# Otherwise, use the default name (latest commit).
+run-name: >-
+  ${{
+    inputs.ref &&
+      (inputs.skip-build
+        && format('Release-please only ({0})', inputs.ref)
+        || format('Publish {0}', inputs.ref))
+    || null
+  }}
 
 permissions:
   contents: write
@@ -19,6 +29,11 @@ on:
         description: "The branch, tag or SHA to publish."
         required: true
         type: string
+      skip-build:
+        description: "Skip artifact build and publish, i.e. run release-please only."
+        default: false
+        type: boolean
+
 
 jobs:
   release-please:
@@ -36,7 +51,7 @@ jobs:
     with:
         ref: ${{ inputs.ref }}
     # Run build job if a release was created or a ref was specified (i.e. workflow was invoked manually)
-    if: ${{ needs.release-please.outputs.release_created || inputs.ref }}
+    if: ${{ !inputs.skip-build && (needs.release-please.outputs.release_created || inputs.ref) }}
 
   publish-to-pypi:
     name: Publish to PyPI
